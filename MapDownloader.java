@@ -1,4 +1,4 @@
-package org.qiuqiu.test;
+package com.test;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.Random;
 
-import org.qiuqiu.vo.BaiduPoint;
 
 /**
  * @author Administrator
