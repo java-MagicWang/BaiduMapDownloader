@@ -1,20 +1,15 @@
-package com.test;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Random;
 
-
-/**
- * @author Administrator
- * <ul>
- * <li>comment:</li>
- * <li>param type: street, satellite</li>
- * <ul>
- */
 public class MapDownloader {
     
     private static int downloadImgNum = 0;
@@ -23,6 +18,7 @@ public class MapDownloader {
     
     private void init(BaiduPoint startPoint, BaiduPoint endPoint, int startLevel, int endLevel, String fileURL,
             String type) {
+        checkFolder(fileURL);
         for (int i = startLevel; i < endLevel; i++) {
             int startBlockX = getBlockNum(startPoint.getLng(), i);
             int startBlockY = getBlockNum(startPoint.getLat(), i);
@@ -62,6 +58,20 @@ public class MapDownloader {
         // }
     }
     
+    private void checkFolder(String fileURL) {
+        Path path = Paths.get(fileURL);
+        if (Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
+            System.out.println("文件夹存在");
+        } else {
+            System.out.println("创建文件夹");
+            try {
+                Files.createDirectories(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
     private int getBlockNum(double num, int level) {
         int mercator = (int) ((num / Math.pow(2, Math.abs(level - 18))) / 256);
         return (int) Math.ceil(mercator);
@@ -83,11 +93,14 @@ public class MapDownloader {
                 System.out.println("图片已存在");
                 return;
             } else {
-                int server = new Random().nextInt(8) + 1;
+                int server = new Random().nextInt(3) + 1;
                 String url = null;
+                
                 if (type == "street" || type.equals("street")) {
-                    url = "http://q" + server + ".baidu.com/it/u=x=" + x + ";y=" + y + ";z=" + level
-                            + ";v=014;type=web&fm=44";
+                    // old url = "http://q" + server + ".baidu.com/it/u=x=" + x + ";y=" + y + ";z=" + level +
+                    // ";v=014;type=web&fm=44";
+                    url = "http://or" + server + ".map.bdimg.com:8080/tile/?qt=tile&x=" + x + "&y=" + y + "&z=" + level
+                            + "&styles=pl&udt=20130822";
                 } else if (type == "satellite" || type.equals("satellite")) {
                     url = "http://q" + server + ".baidu.com/it/u=x=" + x + ";y=" + y + ";z=" + level
                             + ";v=009;type=sate&fm=46";
@@ -115,20 +128,10 @@ public class MapDownloader {
     
     public void download(String url, String fileURL) {
         try {
-            // 创建流
-            BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-            // 存放地址
-            File img = new File(fileURL);
-            // 生成图片
-            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(img));
-            byte[] buf = new byte[2048];
-            int length = in.read(buf);
-            while (length != -1) {
-                out.write(buf, 0, length);
-                length = in.read(buf);
-            }
-            in.close();
-            out.close();
+            URL website = new URL(url);
+            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+            FileOutputStream fos = new FileOutputStream(fileURL);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,6 +141,6 @@ public class MapDownloader {
         BaiduPoint p1 = new BaiduPoint(9724758.79, 5450608.44);
         BaiduPoint p2 = new BaiduPoint(9770070.88, 5381232.41);
         MapDownloader mk = new MapDownloader();
-        mk.init(p1, p2, 3, 19, "D:/map/baidu", "satellite");
+        mk.init(p1, p2, 3, 19, "D:/map/baidu", "street");
     }
 }
