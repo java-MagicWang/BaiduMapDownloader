@@ -31,6 +31,11 @@ public class MapDownloader {
     
     private List<Position> cityList = new ArrayList<Position>();
     
+    public static void main(String[] args) {
+        MapDownloader mk = new MapDownloader();
+        mk.start("无锡", 3, 19, "D:/map/baidu", "street");
+    }
+    
     private void start(String cityName, int startLevel, int endLevel, String fileURL, String type) {
         prepareList();
         List<Position> cpList = new ArrayList<Position>();
@@ -577,8 +582,4 @@ public class MapDownloader {
         cityList.add(new Position("澳门", 12639267.13, 2508287.37, 12647856.41, 2521696.25));
     }
     
-    public static void main(String[] args) {
-        MapDownloader mk = new MapDownloader();
-        mk.start("无锡", 3, 19, "D:/map/baidu", "street");
-    }
 }
