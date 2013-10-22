@@ -32,8 +32,8 @@ public class MapDownloader {
     private List<Position> cityList = new ArrayList<Position>();
     
     public static void main(String[] args) {
-        MapDownloader mk = new MapDownloader();
-        mk.start("无锡", 3, 19, "D:/map/baidu", "street");
+        MapDownloader md = new MapDownloader();
+        md.start("无锡", 3, 19, "D:/map/baidu", "street");
     }
     
     private void start(String cityName, int startLevel, int endLevel, String fileURL, String type) {
