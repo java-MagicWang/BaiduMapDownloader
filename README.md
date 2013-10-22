@@ -9,7 +9,7 @@
 
     public static void main(String[] args) {
         MapDownloader mk = new MapDownloader();
-        //无锡，范围3~19，路径，街道地图
+        //无锡，缩放级别3~19，路径，街道地图、卫星（satellite）
         mk.start("无锡", 3, 19, "D:/map/baidu", "street");
     }
 
