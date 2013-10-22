@@ -3,9 +3,15 @@
 
 > 通过mapdownload类下载地图
 > 
-> 输入城市名称、地图级别范围、地图类型即可
+> 输入城市名称、地图级别范围、文件存放路径、地图类型即可
 > 
 > 城市名称如下
+
+    public static void main(String[] args) {
+        MapDownloader mk = new MapDownloader();
+        //无锡，范围3~19，路径，街道地图
+        mk.start("无锡", 3, 19, "D:/map/baidu", "street");
+    }
 
 城市列表
 #########
